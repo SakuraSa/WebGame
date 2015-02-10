@@ -323,14 +323,18 @@ class APIUserLogin(PageBase):
     def __init__(self, application, request, **kwargs):
         PageBase.__init__(self, application, request, **kwargs)
 
-    def post(self):
+    def get(self):
+        return self.login()
+
+    def login(self):
         username = self.get_argument('username')
         password = self.get_argument('password')
         remember = self.get_argument('remember-me', None)
 
         success = PageLogin.login(self, username, password, remember)
         return dict(
-            success=success
+            success=success,
+            reason='ok'
         )
 
 
@@ -342,8 +346,12 @@ class APIUserLogout(PageBase):
     def __init__(self, application, request, **kwargs):
         PageBase.__init__(self, application, request, **kwargs)
 
-    def post(self):
+    def get(self):
+        return self.logout()
+
+    def logout(self):
         PageLogout.logout(self)
         return dict(
-            success=True
+            success=True,
+            reason='ok'
         )
