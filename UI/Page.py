@@ -438,3 +438,60 @@ class APIUserLogout(PageBase):
             reason='ok'
         )
 
+
+@mapping('/api/user/basic_info')
+class APIUserBasicInfo(PageBase):
+    """
+    APIUserBasicInfo
+
+    api to get basic info of the user
+    this api needs login first
+    when param user_id = -1
+    this api returns basic info of current user
+
+    method: get
+    param user_id: int | null
+    result:
+    {
+      success: bool,
+      reason: str,
+      data: {
+        user_id: int,
+        user_name: str,
+        user_header_url: str | null,
+        user_register_time: str     (%Y/%m/%d %H:%M:%S)
+      } | null
+    }
+    """
+    def __init__(self, application, request, **kwargs):
+        PageBase.__init__(self, application, request, **kwargs)
+
+    def get(self):
+        self.write(self.get_basic_info())
+
+    def get_basic_info(self):
+        if not self.current_user:
+            return dict(
+                success=False,
+                reason='need login first'
+            )
+        user_id = self.get_argument('user_id', None)
+        if user_id is None:
+            user = self.current_user
+        else:
+            user = self.db.query(User).filter(User.user_id == user_id).first()
+            if not user:
+                return dict(
+                    success=False,
+                    reason='user is not found by user_id = "%s"' % user_id
+                )
+        return dict(
+            success=True,
+            reason='ok',
+            data=dict(
+                user_id=user.user_id,
+                user_name=user.user_name,
+                user_header_url=user.user_header_url,
+                user_register_time=user.user_register_time.strftime('%Y/%m/%d %H:%M:%S')
+            )
+        )
