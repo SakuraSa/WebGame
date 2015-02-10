@@ -259,6 +259,17 @@ class PageHome(PageBase):
 class APIGetUsernameAvailability(PageBase):
     """
     APIGetUsernameAvailability
+
+    api for register page
+    check the availability of the username
+
+    method: get
+    param username: str
+    result:
+    {
+      availability: bool,
+      reason: str
+    }
     """
     def __init__(self, application, request, **kwargs):
         PageBase.__init__(self, application, request, **kwargs)
@@ -287,6 +298,17 @@ class APIGetUsernameAvailability(PageBase):
 class APICreateVerificationCode(PageBase):
     """
     APICreateVerificationCode
+
+    api for verification code
+    generate a new verification code
+
+    method: get
+    no param
+    result:
+    {
+      uuid: str,
+      image: str
+    }
     """
     def __init__(self, application, request, **kwargs):
         PageBase.__init__(self, application, request, **kwargs)
@@ -300,6 +322,18 @@ class APICreateVerificationCode(PageBase):
 class APICheckVerificationCode(PageBase):
     """
     APICheckVerificationCode
+
+    api for verification code
+    check the verification code
+
+    method: get
+    param ver_uuid: str
+    param ver_code: str
+    result:
+    {
+      success: bool,
+      ok: bool
+    }
     """
     def __init__(self, application, request, **kwargs):
         PageBase.__init__(self, application, request, **kwargs)
@@ -319,6 +353,20 @@ class APICheckVerificationCode(PageBase):
 class APIUserLogin(PageBase):
     """
     APIUserLogin
+
+    api for user login
+    check username and password
+    set session cookies
+
+    method: get
+    param username: str
+    param password: str
+    param remember-me: bool
+    result:
+    {
+      success: bool,
+      reason: str
+    }
     """
     def __init__(self, application, request, **kwargs):
         PageBase.__init__(self, application, request, **kwargs)
@@ -330,7 +378,8 @@ class APIUserLogin(PageBase):
         username = self.get_argument('username')
         password = self.get_argument('password')
         remember = self.get_argument('remember-me', None)
-
+        if remember == 'false' or remember == 'False':
+            remember = False
         success = PageLogin.login(self, username, password, remember)
         return dict(
             success=success,
@@ -342,6 +391,17 @@ class APIUserLogin(PageBase):
 class APIUserLogout(PageBase):
     """
     APIUserLogout
+
+    api for user logout
+    unset session cookies
+
+    method: get
+    no param
+    result:
+    {
+      success: bool,
+      reason: str
+    }
     """
     def __init__(self, application, request, **kwargs):
         PageBase.__init__(self, application, request, **kwargs)
