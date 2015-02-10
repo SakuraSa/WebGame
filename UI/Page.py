@@ -125,6 +125,25 @@ class PageBase(tornado.web.RequestHandler):
     def get_referer(self):
         return self.request.headers.get('referer', None)
 
+    def get_converted_param(self, param_name, convert_function):
+        param_str = self.get_argument(param_name, None)
+        if param_str is None:
+            return dict(
+                success=False,
+                reason='param "%s" not found.' % param_name,
+                data=None)
+        try:
+            data = convert_function(param_str)
+        except:
+            return dict(
+                success=False,
+                reason='illegal param "%s" = "%s".' % (param_name, param_str),
+                data=None)
+        return dict(
+            success=True,
+            reason='ok',
+            data=data)
+
 
 @mapping('/login')
 class PageLogin(PageBase):
