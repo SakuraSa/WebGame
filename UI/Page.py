@@ -446,7 +446,7 @@ class APIUserBasicInfo(PageBase):
 
     api to get basic info of the user
     this api needs login first
-    when param user_id = -1
+    when param user_id leaves blank
     this api returns basic info of current user
 
     method: get
