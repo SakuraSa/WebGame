@@ -92,6 +92,10 @@ class Role(Base):
             self.role_id = role_id
 
 
+class UserHasMonster(Base):
+    __table__ = Table("t_user_has_monster", meta, autoload=True, autoload_with=get_engine())
+
+
 class Skill(Base):
     __table__ = Table("t_skill", meta, autoload=True, autoload_with=get_engine())
 
@@ -110,3 +114,41 @@ class SPSkill(Base):
 
 class Monster(Base):
     __table__ = Table("t_monster", meta, autoload=True, autoload_with=get_engine())
+
+
+class MonsterType(Base):
+    __table__ = Table("t_monster_type", meta, autoload=True, autoload_with=get_engine())
+
+
+class MonsterHasEquipment(Base):
+    __table__ = Table("t_monster_has_equipment", meta, autoload=True, autoload_with=get_engine())
+
+
+class MonsterHasSkill(Base):
+    __table__ = Table("t_monster_has_skill", meta, autoload=True, autoload_with=get_engine())
+
+
+class MonsterHasSPSkill(Base):
+    __table__ = Table("t_monster_has_sp_skill", meta, autoload=True, autoload_with=get_engine())
+
+
+class Element(Base):
+    __table__ = Table("t_element", meta, autoload=True, autoload_with=get_engine())
+
+    def __init__(self, name, element_id=None):
+        self.element_name = name
+        if element_id is not None:
+            self.element_id = element_id
+
+
+class ElementVSElement(Base):
+    __table__ = Table("t_element_vs_element", meta, autoload=True, autoload_with=get_engine())
+
+    def __init__(self, atk_element_id, def_element_id, effect=1.0):
+        self.atk_element_id = atk_element_id
+        self.def_element_id = def_element_id
+        self.effect = effect
+
+
+class Equipment(Base):
+    __table__ = Table("t_element", meta, autoload=True, autoload_with=get_engine())
