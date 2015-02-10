@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block html_head %}
+<!--[if lt IE 10]>
+<script src="static/js/ie-low-version-warning.js"></script>
+<![endif]-->
+{% end %}
+{% block title %}WebGame{% end %}
+{% block body %}
+<div class="container">
+  <div class="span12">{% module title(title='雀娘', subtitle='online') %}</div>
+  <div class="jumbotron">
+    <h1>这是标题</h1>
+    <p>这里不知道改填什么</p>
+    <p>总之先填一些</p>
+    <p>看起来有一些东西</p>
+    <p>可是实际上就是空壳子呀（摔</p>
+    {% if not current_user %}
+    <p>
+      您尚未登陆<br>
+      <a class="btn btn-lg btn-primary" href="/login" role="button"><span class="glyphicon glyphicon-log-in"> 登陆</span></a>
+      <a class="btn btn-lg btn-primary" href="/register" role="button"><span class="glyphicon glyphicon-registration-mark"> 注册</span></a>
+    </p>
+    {% else %}
+    <p>
+        用户<strong>{{ current_user.user_name }}</strong>已经登陆<br>
+        <a class="btn btn-lg btn-primary" href="/logout" role="button"><span class="glyphicon glyphicon-log-out"> 注销</span></a>
+    </p>
+    {% end %}
+  </div>
+</div>
+{% end %}

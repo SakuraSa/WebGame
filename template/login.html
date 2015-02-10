@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block html_head %}
+<link href="/static/css/login.css" rel="stylesheet">
+{% end %}
+{% block title %}Login{% end %}
+{% block header %}
+<div class="container">
+  <div class="span12">{% module title(title='WebGame', subtitle='online') %}</div>
+</div>
+{% end %}
+{% block body %}
+<div class="container">
+  <form class="form-login" role="form" action="/login" method="post">
+    <h2 class="form-login-heading">Login</h2>
+    <input type="hidden" name="next" id="input-next" value="{{ next }}">
+    <div class="form-group has-feedback">
+      <label class="control-label" for="input-username">Username:</label>
+      <input type="text" name="username" id="input-username" maxlength="20" class="form-control" placeholder="username" required autofocus>
+    </div>
+    <div class="form-group has-feedback">
+      <label class="control-label" for="input-password">Password:</label>
+      <input type="password" name="password" id="input-password" class="form-control" placeholder="password" required>
+    </div>
+    {% module verification() %}
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" value="remember-me" name="remember-me" checked> remember me
+      </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">
+      login
+    </button>
+  </form>
+</div>
+{% end %}
+{% block html_tail %}
+<script src="/static/js/validation-login.js"></script>
+{% end %}

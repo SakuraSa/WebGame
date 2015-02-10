@@ -1,0 +1,112 @@
+#!/usr/bin/env python
+# coding = utf-8
+
+"""
+core.models
+"""
+import json
+
+__author__ = 'Rnd495'
+
+import re
+import datetime
+
+import hashlib
+from sqlalchemy import create_engine
+from sqlalchemy import Column, Integer, Float, String, DateTime, Text, Index
+from sqlalchemy.schema import MetaData, Table, Sequence
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+from configs import Configs
+
+configs = Configs.instance()
+meta = MetaData()
+Base = declarative_base()
+
+
+_engine = None
+_session_maker = None
+_session = None
+
+
+def get_engine():
+    global _engine
+    if not _engine:
+        _engine = create_engine(
+            configs.database_url,
+            encoding=configs.database_encoding,
+            echo=False)
+        Base.metadata.create_all(_engine)
+    return _engine
+
+
+def get_session_maker():
+    global _session_maker
+    if not _session_maker:
+        _session_maker = sessionmaker(bind=get_engine())
+    return _session_maker
+
+
+def get_global_session():
+    global _session
+    if not _session:
+        _session = get_session_maker()()
+    return _session
+
+
+def get_new_session():
+    return get_session_maker()()
+
+
+class User(Base):
+    __table__ = Table("t_user", meta, autoload=True, autoload_with=get_engine())
+
+    def __init__(self, name, pwd,
+                 user_id=None, role_id=3, header_url=None):
+        self.user_name = name
+        self.user_pass = User.password_hash(pwd)
+        self.user_register_time = datetime.datetime.now()
+        self.user_role_id = role_id
+        self.user_header_url = header_url
+        if user_id is not None:
+            self.user_id = user_id
+
+    def get_is_same_password(self, password):
+        return User.password_hash(password) == self.user_pass
+
+    def set_password(self, password):
+        self.user_pass = User.password_hash(password)
+
+    @staticmethod
+    def password_hash(text):
+        return hashlib.sha256(text + configs.user_password_hash_salt).hexdigest()
+
+
+class Role(Base):
+    __table__ = Table("t_role", meta, autoload=True, autoload_with=get_engine())
+
+    def __init__(self, name, role_id=None):
+        self.role_name = name
+        if role_id is not None:
+            self.role_id = role_id
+
+
+class Skill(Base):
+    __table__ = Table("t_skill", meta, autoload=True, autoload_with=get_engine())
+
+
+class SkillType(Base):
+    __table__ = Table("t_skill_type", meta, autoload=True, autoload_with=get_engine())
+
+
+class SkillTargetType(Base):
+    __table__ = Table("t_skill_target_type", meta, autoload=True, autoload_with=get_engine())
+
+
+class SPSkill(Base):
+    __table__ = Table("t_sp_skill", meta, autoload=True, autoload_with=get_engine())
+
+
+class Monster(Base):
+    __table__ = Table("t_monster", meta, autoload=True, autoload_with=get_engine())

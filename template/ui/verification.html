@@ -1,0 +1,10 @@
+<div id="ver-code-input-group" class="form-group has-feedback">
+  <label class="control-label" for="ver_code">ver code:</label>
+  <input type="text" id="ver_code" name="ver_code" class="form-control" placeholder="code" maxlength="{{ len(code.code) }}" required>
+  <input type="hidden" id="ver_uuid" name="ver_uuid" value="{{ code.uuid }}">
+</div>
+<div style="display: none">
+  <div id="ver-code-container">
+    <a href="javascript:" id="ver_image_refresh_button"><img id="ver_image" class="img-responsive img-rounded" src="{{ code.image }}"></a>
+  </div>
+</div>

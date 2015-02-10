@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% end %}
+{% block body %}
+<div class="container">
+  <div class="span12">{% module title(title='WebGame', subtitle='online') %}</div>
+  <div class="jumbotron">
+    <h1>{{ title }}</h1>
+    {% if message %}
+      <pre class="bg-{{ style }}">{{ message }}</pre>
+    {% end %}
+    <p>
+      <a id="btn_ok" class="btn btn-lg btn-primary" href="javascript:redirect_page();" role="button">ok</a>
+    </p>
+  </div>
+</div>
+{% end %}
+{% block html_tail %}
+<script>
+  var redirect_page = function () {
+    var url = "{{ redirect_to }}";
+    if(url == "::JUMP_BACK::") {
+      window.history.back();
+    }else {
+      window.location = url;
+    }
+  };
+  $(function() {
+    var btn = $('#btn_ok');
+    var btn_text = btn.html();
+    var countdown = {{ countdown }};
+    var countdown_backcall = function() {
+      if(countdown >= 0) {
+        btn.html(btn_text + " " + countdown + "s");
+        countdown -= 1;
+        setTimeout(countdown_backcall, 1000);
+      }else {
+        redirect_page();
+      }
+    };
+    countdown_backcall();
+  });
+</script>
+{% end %}
