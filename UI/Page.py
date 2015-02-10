@@ -131,17 +131,20 @@ class PageBase(tornado.web.RequestHandler):
             return dict(
                 success=False,
                 reason='param "%s" not found.' % param_name,
+                error_msg='',
                 data=None)
         try:
             data = convert_function(param_str)
-        except:
+        except Exception as error:
             return dict(
                 success=False,
                 reason='illegal param "%s" = "%s".' % (param_name, param_str),
+                error_msg=error.message,
                 data=None)
         return dict(
             success=True,
             reason='ok',
+            error_msg='',
             data=data)
 
 
@@ -434,3 +437,4 @@ class APIUserLogout(PageBase):
             success=True,
             reason='ok'
         )
+
