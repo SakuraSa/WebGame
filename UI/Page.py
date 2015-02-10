@@ -394,7 +394,7 @@ class APIUserLogin(PageBase):
         PageBase.__init__(self, application, request, **kwargs)
 
     def get(self):
-        return self.login()
+        self.write(self.login())
 
     def login(self):
         username = self.get_argument('username')
@@ -429,7 +429,7 @@ class APIUserLogout(PageBase):
         PageBase.__init__(self, application, request, **kwargs)
 
     def get(self):
-        return self.logout()
+        self.write(self.logout())
 
     def logout(self):
         PageLogout.logout(self)
