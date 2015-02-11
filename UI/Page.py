@@ -378,12 +378,14 @@ class APIUserLogin(PageBase):
 
     api for user login
     check username and password
+    base64 = true while password is base64 encoded
     set session cookies
 
     method: get
     param username: str
     param password: str
     param remember-me: bool
+    param base64: bool
     result:
     {
       success: bool,
@@ -400,8 +402,11 @@ class APIUserLogin(PageBase):
         username = self.get_argument('username')
         password = self.get_argument('password')
         remember = self.get_argument('remember-me', None)
+        base64 = self.get_argument('base64', None)
         if remember == 'false' or remember == 'False':
             remember = False
+        if base64 and base64.lower() != 'false':
+            password = password.decode('base64')
         success = PageLogin.login(self, username, password, remember)
         return dict(
             success=success,
