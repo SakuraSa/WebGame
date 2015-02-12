@@ -406,7 +406,13 @@ class APIUserLogin(PageBase):
         if remember == 'false' or remember == 'False':
             remember = False
         if base64 and base64.lower() != 'false':
-            password = password.decode('base64')
+            try:
+                password = password.decode('base64')
+            except:
+                return dict(
+                    success=False,
+                    reason='"%s" is not base64 encoded.' % password
+                )
         success = PageLogin.login(self, username, password, remember)
         return dict(
             success=bool(success),
