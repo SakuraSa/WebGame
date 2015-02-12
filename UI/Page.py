@@ -409,7 +409,7 @@ class APIUserLogin(PageBase):
             password = password.decode('base64')
         success = PageLogin.login(self, username, password, remember)
         return dict(
-            success=success,
+            success=bool(success),
             reason='ok'
         )
 
