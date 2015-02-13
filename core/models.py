@@ -4,17 +4,14 @@
 """
 core.models
 """
-import json
 
 __author__ = 'Rnd495'
 
-import re
 import datetime
-
 import hashlib
+
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, Float, String, DateTime, Text, Index
-from sqlalchemy.schema import MetaData, Table, Sequence
+from sqlalchemy.schema import MetaData, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
