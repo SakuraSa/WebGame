@@ -491,18 +491,21 @@ class APIUserBasicInfo(PageBase):
             user = self.current_user
         else:
             user = self.db.query(User).filter(User.user_id == user_id).first()
+            self.db.close()
             if not user:
                 return dict(
                     success=False,
                     reason='user is not found by user_id = "%s"' % user_id
                 )
+
+        # get user model dict
+        data = user.to_dict()
+
+        # drop secret field
+        data.pop('user_pass')
+
         return dict(
             success=True,
             reason='ok',
-            data=dict(
-                user_id=user.user_id,
-                user_name=user.user_name,
-                user_header_url=user.user_header_url,
-                user_register_time=user.user_register_time.strftime('%Y/%m/%d %H:%M:%S')
-            )
+            data=data
         )
