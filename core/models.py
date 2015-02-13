@@ -20,10 +20,32 @@ from sqlalchemy.orm import sessionmaker
 
 from configs import Configs
 
+
+class _Base(object):
+    """
+    Declarative base
+    """
+    DATETIME_FORMAT = '%Y/%m/%d %H:%M:%S'
+
+    def to_dict(self):
+        fields = {}
+        for field in dir(self):
+            if field.startswith('_') or field in ['metadata', 'DATETIME_FORMAT']:
+                continue
+            val = self.__getattribute__(field)
+            if callable(val):
+                continue
+            if isinstance(val, datetime.datetime):
+                val = val.strftime(self.DATETIME_FORMAT)
+            elif isinstance(val, Base):
+                val = val.to_dict()
+            fields[field] = val
+        return fields
+
+
 configs = Configs.instance()
 meta = MetaData()
-Base = declarative_base()
-
+Base = declarative_base(cls=_Base)
 
 _engine = None
 _session_maker = None
