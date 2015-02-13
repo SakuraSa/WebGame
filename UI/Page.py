@@ -556,7 +556,8 @@ class APIUserHasMonsterBasicInfoList(PageBase):
         monster_love: int,
         monster_hunger: int,
         monster_energy: int,
-        monster_type_id: int
+        monster_type_id: int,
+        monster_owner_id: int
       },
       ...
       ]
