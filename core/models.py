@@ -115,10 +115,6 @@ class Role(Base):
             self.role_id = role_id
 
 
-class UserHasMonster(Base):
-    __table__ = Table("t_user_has_monster", meta, autoload=True, autoload_with=get_engine())
-
-
 class Skill(Base):
     __table__ = Table("t_skill", meta, autoload=True, autoload_with=get_engine())
 
