@@ -521,3 +521,65 @@ class APIUserBasicInfo(PageBase):
             reason='ok',
             data=data
         )
+
+
+@mapping('/api/user/has_monster/basic_info/list')
+class APIUserHasMonsterBasicInfoList(PageBase):
+    """
+    APIUserHasMonsterBasicInfoList
+
+    api to get basic info of the monster that user has
+    this api needs login first
+    when param user_id leaves blank
+    this api returns basic info of current user
+
+    method: get
+    param user_id: int | null
+    result:
+    {
+      success: bool,
+      reason: str,
+      data: [
+      {
+        monster_id: int,
+        monster_name: str,
+        monster_hp: int,
+        monster_atk: int,
+        monster_def: int,
+        monster_spd: int,
+        monster_sp_atk: int,
+        monster_sp_def: int,
+        monster_element_id: int,
+        monster_rebirth: int,
+        monster_exp: int,
+        monster_level: int,
+        monster_love: int,
+        monster_hunger: int,
+        monster_energy: int,
+        monster_type_id: int
+      },
+      ...
+      ]
+    }
+    """
+    def __init__(self, application, request, **kwargs):
+        PageBase.__init__(self, application, request, **kwargs)
+
+    def get(self):
+        self.write(self.get_monster_basic_info_list())
+
+    def get_monster_basic_info_list(self):
+        user_result = self.get_user()
+        if not user_result['success']:
+            return user_result
+        else:
+            user = user_result['user']
+
+        session = core.models.get_new_session()
+        monster_list = session.query(Monster).filter(Monster.monster_owner_id == user.user_id).all()
+        monster_basic_info_list = [monster.to_dict() for monster in monster_list]
+        return dict(
+            success=True,
+            reason='ok',
+            data=monster_basic_info_list
+        )
