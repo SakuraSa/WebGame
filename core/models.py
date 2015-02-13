@@ -27,13 +27,17 @@ class _Base(object):
     def to_dict(self):
         fields = {}
         for field in dir(self):
+            # those are not field
             if field.startswith('_') or field in ['metadata', 'DATETIME_FORMAT']:
                 continue
             val = self.__getattribute__(field)
+            # dirty way to remove functions
             if callable(val):
                 continue
+            # format datetime to text
             if isinstance(val, datetime.datetime):
                 val = val.strftime(self.DATETIME_FORMAT)
+            # format children metadata
             elif isinstance(val, Base):
                 val = val.to_dict()
             fields[field] = val
