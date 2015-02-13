@@ -14,7 +14,7 @@ import tornado.gen
 
 import core.models
 from core import verification
-from core.models import User
+from core.models import User, Monster
 from core.configs import Configs
 from UI.Manager import mapping
 
@@ -146,6 +146,29 @@ class PageBase(tornado.web.RequestHandler):
             reason='ok',
             error_msg='',
             data=data)
+
+    def get_user(self):
+        if not self.current_user:
+            return dict(
+                success=False,
+                reason='need login first'
+            )
+        user_id = self.get_argument('user_id', None)
+        if user_id is None:
+            user = self.current_user
+        else:
+            user = self.db.query(User).filter(User.user_id == user_id).first()
+            self.db.close()
+            if not user:
+                return dict(
+                    success=False,
+                    reason='user is not found by user_id = "%s"' % user_id
+                )
+        return dict(
+            success=True,
+            reason='ok',
+            user=user
+        )
 
 
 @mapping('/login')
@@ -481,22 +504,11 @@ class APIUserBasicInfo(PageBase):
         self.write(self.get_basic_info())
 
     def get_basic_info(self):
-        if not self.current_user:
-            return dict(
-                success=False,
-                reason='need login first'
-            )
-        user_id = self.get_argument('user_id', None)
-        if user_id is None:
-            user = self.current_user
+        user_result = self.get_user()
+        if not user_result['success']:
+            return user_result
         else:
-            user = self.db.query(User).filter(User.user_id == user_id).first()
-            self.db.close()
-            if not user:
-                return dict(
-                    success=False,
-                    reason='user is not found by user_id = "%s"' % user_id
-                )
+            user = user_result['user']
 
         # get user model dict
         data = user.to_dict()
